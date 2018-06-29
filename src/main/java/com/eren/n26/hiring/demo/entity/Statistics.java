@@ -1,8 +1,6 @@
 package com.eren.n26.hiring.demo.entity;
 
-import lombok.ToString;
 
-@ToString
 public class Statistics {
 
     private double sum;
@@ -61,6 +59,17 @@ public class Statistics {
 
     public void setCount(double count) {
         this.count = count;
+    }
+
+    @Override
+    public String toString() {
+        return "Statistics{" +
+                "sum=" + sum +
+                ", avg=" + avg +
+                ", max=" + max +
+                ", min=" + min +
+                ", count=" + count +
+                '}';
     }
 
     public static class StatisticsBuilder {

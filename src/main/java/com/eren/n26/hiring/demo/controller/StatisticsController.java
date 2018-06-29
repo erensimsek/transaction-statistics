@@ -7,6 +7,7 @@ import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -30,15 +33,15 @@ public class StatisticsController {
     @Autowired
     MovingTransactionStatisticsService movingTransactionStatisticsService;
 
+    @Value("${second_filter_milisecond}")
+    private int SECOND_FILTER; // only keep SECOND_FILTER second
+
     @RequestMapping(value = "/transactions", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity createTransaction(@RequestBody Transaction transactionRequest) {
-
-        LOGGER.info("Creating new transaction: "+transactionRequest);
-
-        if(transactionRequest.getTimestamp() - System.currentTimeMillis() > 60000) {
+    public ResponseEntity createTransaction(@Valid @RequestBody Transaction transactionRequest) {
+        if(System.currentTimeMillis() - transactionRequest.getTimestamp() < SECOND_FILTER) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
-
+        LOGGER.info("Creating new transaction: "+transactionRequest + System.currentTimeMillis());
         movingTransactionStatisticsService.add(transactionRequest);
 
         return new ResponseEntity(HttpStatus.CREATED);
@@ -46,7 +49,7 @@ public class StatisticsController {
 
     @RequestMapping(value = "/statistics", method = RequestMethod.GET)
     public Statistics getStatistics() {
-        return MovingTransactionStatisticsService.getStatistics();
+        return movingTransactionStatisticsService.getStatistics();
     }
 
 }

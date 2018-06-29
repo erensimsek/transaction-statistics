@@ -4,6 +4,7 @@ import com.eren.n26.hiring.demo.entity.Statistics;
 import com.eren.n26.hiring.demo.entity.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -17,23 +18,29 @@ public class MovingTransactionStatisticsService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MovingTransactionStatisticsService.class);
 
-    private static List<Transaction> transactions = new Vector<Transaction>();
-    private static Double sum = 0d;
-    private static Statistics statistics;
+    private List<Transaction> transactions = new Vector<Transaction>();
+    private Double sum;
+    private Statistics statistics;
 
-    private static int SECOND_FILTER = 60000; // only keep 60 second
-
+    @Value("${second_filter_milisecond}")
+    private int SECOND_FILTER; // only keep SECOND_FILTER second
 
     public void add(Transaction transaction) {
-        sum = sum + transaction.getAmount();
-        transactions.add(transaction);
+        if (System.currentTimeMillis() - transaction.getTimestamp() < SECOND_FILTER) {
+            transactions.add(transaction);
+            collectStatistics();
+        }
+    }
+
+    @Scheduled(fixedDelay = 1000)
+    private void collectStatistics() {
         transactions =
                 transactions.stream()
-                        .filter(p -> p.getTimestamp() >= System.currentTimeMillis() - SECOND_FILTER)  // only keep 60 second
-                        .sorted(Comparator.comparingLong(Transaction::getTimestamp)) // sort by mount
+                        .filter(p -> (System.currentTimeMillis() - p.getTimestamp()) < SECOND_FILTER)  // only keep SECOND_FILTER second
+                        .sorted(Comparator.comparingDouble(Transaction::getAmount))
                         .collect(Collectors.toList());
 
-        transactions.sort(Comparator.comparingDouble(Transaction::getAmount));
+        sum = transactions.stream().mapToDouble(Transaction::getAmount).sum();
 
         statistics = statistics.builder().sum(getSum()).
                 avg(getAverage()).
@@ -41,7 +48,7 @@ public class MovingTransactionStatisticsService {
                 max(getMax()).
                 min(getMin()).build();
 
-        LOGGER.info(""+transactions);
+        LOGGER.info("Transaction "+statistics +" in last " + SECOND_FILTER/1000 +" seconds");
     }
 
     public Double getAverage() {
@@ -69,26 +76,8 @@ public class MovingTransactionStatisticsService {
         return sum;
     }
 
-    public static Statistics getStatistics() {
+    public Statistics getStatistics() {
         return statistics;
     }
-
-    /*@Scheduled(fixedDelay = 10000)
-    public void manageData() {
-        LOGGER.info("Filtering and sorting transaction");
-        transactions =
-                transactions.stream()
-                        .filter(p -> p.getTimestamp() >= System.currentTimeMillis() - 60000)  // only keep 60 second
-                        .sorted(Comparator.comparingDouble(Transaction::getAmount)) // sort by mount
-                        .collect(Collectors.toList());
-
-        transactions.sort(Comparator.comparingLong(Transaction::getTimestamp));
-
-        statistics = statistics.builder().sum(getSum()).
-                        avg(getAverage()).
-                        count(getCount()).
-                        max(getMax()).
-                        min(getMin()).build();
-    }*/
 
 }

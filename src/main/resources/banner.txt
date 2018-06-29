@@ -1,5 +1,7 @@
 |
-|
++-+ +-+ +-+ +-+ +-+ +-+ +-+
+ |W| |e| |l| |c| |o| |m| |e|
++-+ +-+ +-+ +-+ +-+ +-+ +-+
 |
 Running ${spring.application.name} on Port: ${server.port}
 |

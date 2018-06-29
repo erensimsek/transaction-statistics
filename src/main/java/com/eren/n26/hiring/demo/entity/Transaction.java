@@ -1,11 +1,8 @@
 package com.eren.n26.hiring.demo.entity;
 
-import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
-@ToString
 public class Transaction {
 
     @NotNull
@@ -13,6 +10,9 @@ public class Transaction {
 
     @NotNull
     private Long timestamp;
+
+    public Transaction() {
+    }
 
     public Transaction(@NotNull Double amount, @NotNull Long timestamp) {
         this.amount = amount;
@@ -63,5 +63,13 @@ public class Transaction {
         public String toString() {
             return "Transaction.TransactionBuilder(amount=" + this.amount + ", timestamp=" + this.timestamp + ")";
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "amount=" + amount +
+                ", timestamp=" + timestamp +
+                '}';
     }
 }
