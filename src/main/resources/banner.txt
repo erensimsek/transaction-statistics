@@ -1,0 +1,7 @@
+|
+|
+|
+Running ${spring.application.name} on Port: ${server.port}
+|
+|
+|
