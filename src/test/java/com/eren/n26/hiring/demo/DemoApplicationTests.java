@@ -26,7 +26,7 @@ public class DemoApplicationTests {
         StatisticsController c = new StatisticsController();
 
         for (int i = 0; i < 10; i++) {
-            Transaction t = Transaction.builder().amount(Math.random()).timestamp(System.currentTimeMillis()).build();
+            Transaction t = Transaction.builder().amount(Double.parseDouble(""+i)).timestamp(System.currentTimeMillis()).build();
             LOGGER.info("T:" + t);
             movingTransactionStatisticsService.add(t);
             LOGGER.info(""+movingTransactionStatisticsService.getStatistics());

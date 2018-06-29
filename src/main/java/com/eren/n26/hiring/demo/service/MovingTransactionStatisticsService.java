@@ -56,12 +56,12 @@ public class MovingTransactionStatisticsService {
 
     public double getMax() {
         if (transactions.isEmpty()) return 0d;
-        return transactions.get(0).getAmount();
+        return transactions.get(transactions.size() - 1).getAmount();
     }
 
     public double getMin() {
         if (transactions.isEmpty()) return 0d;
-        return transactions.get(transactions.size() - 1).getAmount();
+        return transactions.get(0).getAmount();
     }
 
     public double getSum() {
