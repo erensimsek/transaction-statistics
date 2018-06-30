@@ -1,4 +1,4 @@
-package com.eren.n26.hiring.demo.entity;
+package com.eren.n26.hiring.demo.pojo;
 
 
 import javax.validation.constraints.NotNull;
@@ -43,7 +43,7 @@ public class Transaction {
         private @NotNull Double amount;
         private @NotNull Long timestamp;
 
-        TransactionBuilder() {
+        public TransactionBuilder() {
         }
 
         public TransactionBuilder amount(@NotNull Double amount) {

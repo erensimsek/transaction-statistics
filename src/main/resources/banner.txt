@@ -1,9 +1,11 @@
 |
-+-+ +-+ +-+ +-+ +-+ +-+ +-+
- |W| |e| |l| |c| |o| |m| |e|
-+-+ +-+ +-+ +-+ +-+ +-+ +-+
 |
-Running ${spring.application.name} on Port: ${server.port}
+|            +-+ +-+ +-+ +-+ +-+ +-+ +-+
+|            |W| |e| |l| |c| |o| |m| |e|
+|            +-+ +-+ +-+ +-+ +-+ +-+ +-+
 |
+| Running ${spring.application.name} on Port: ${server.port}
+|
+| Developed By Eren Simsek
 |
 |

@@ -1,7 +1,8 @@
 package com.eren.n26.hiring.demo.controller;
 
-import com.eren.n26.hiring.demo.entity.Statistics;
-import com.eren.n26.hiring.demo.entity.Transaction;
+import com.eren.n26.hiring.demo.pojo.Statistics;
+import com.eren.n26.hiring.demo.pojo.Transaction;
+import com.eren.n26.hiring.demo.exception.TooOlderTransactionException;
 import com.eren.n26.hiring.demo.service.MovingTransactionStatisticsService;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
@@ -38,12 +39,14 @@ public class StatisticsController {
 
     @RequestMapping(value = "/transactions", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity createTransaction(@Valid @RequestBody Transaction transactionRequest) {
-        if(System.currentTimeMillis() - transactionRequest.getTimestamp() < SECOND_FILTER) {
+
+        try {
+            movingTransactionStatisticsService.add(transactionRequest);
+            LOGGER.info("Added new transaction: "+transactionRequest + System.currentTimeMillis());
+        } catch (TooOlderTransactionException e) {
+            LOGGER.debug(e.getMessage());
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
-        LOGGER.info("Creating new transaction: "+transactionRequest + System.currentTimeMillis());
-        movingTransactionStatisticsService.add(transactionRequest);
-
         return new ResponseEntity(HttpStatus.CREATED);
     }
 

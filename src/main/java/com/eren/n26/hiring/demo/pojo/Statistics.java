@@ -1,4 +1,4 @@
-package com.eren.n26.hiring.demo.entity;
+package com.eren.n26.hiring.demo.pojo;
 
 
 public class Statistics {
@@ -7,9 +7,9 @@ public class Statistics {
     private double avg;
     private double max;
     private double min;
-    private double count;
+    private long count;
 
-    public Statistics(double sum, double avg, double max, double min, double count) {
+    public Statistics(double sum, double avg, double max, double min, long count) {
         this.sum = sum;
         this.avg = avg;
         this.max = max;
@@ -57,7 +57,7 @@ public class Statistics {
         return count;
     }
 
-    public void setCount(double count) {
+    public void setCount(long count) {
         this.count = count;
     }
 
@@ -77,7 +77,7 @@ public class Statistics {
         private double avg;
         private double max;
         private double min;
-        private double count;
+        private long count;
 
         StatisticsBuilder() {
         }
@@ -102,7 +102,7 @@ public class Statistics {
             return this;
         }
 
-        public StatisticsBuilder count(double count) {
+        public StatisticsBuilder count(long count) {
             this.count = count;
             return this;
         }

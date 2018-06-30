@@ -32,7 +32,7 @@ public class SwaggerConfig {
 						"calculate realtime statistic from the last 60 seconds. There will be two APIs, one of them is \n" +
 						"called every time a transaction is made. It is also the sole input of this rest API. The other one \n" +
 						"returns the statistic based of the transactions of the last 60 seconds.", "By Eren Simsek v 1.0",
-				"There is no terms of service", "hiring@erensimsek.com", "License of API", "API license URL");
+				"There is no terms of service", "erensimsek@gmail.com | www.erensimsek.com", "MIT License", "http://www.erensimsek.com");
 
 	}
 }

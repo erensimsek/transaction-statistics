@@ -1,6 +1,9 @@
 package com.eren.n26.hiring.demo;
 
-import com.eren.n26.hiring.demo.entity.Transaction;
+import static org.assertj.core.api.BDDAssertions.then;
+
+import com.eren.n26.hiring.demo.pojo.Transaction;
+import com.eren.n26.hiring.demo.exception.TooOlderTransactionException;
 import com.eren.n26.hiring.demo.service.MovingTransactionStatisticsService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -9,16 +12,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TransactionStatisticsApplicationTests {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TransactionStatisticsApplicationTests.class);
 
     @Autowired
-    MovingTransactionStatisticsService movingTransactionStatisticsService;
+    private MovingTransactionStatisticsService movingTransactionStatisticsService;
+
+    @LocalServerPort
+    private int port;
 
     @Test
     public void statisticsServiceServiceTest() throws InterruptedException {
@@ -26,8 +34,12 @@ public class TransactionStatisticsApplicationTests {
         LOGGER.info("Testing statisticsServiceServiceTest() method is Starting...");
 
         for (int i = 0; i < 20; i++) {
-            Transaction t = Transaction.builder().amount(Double.parseDouble(""+i)).timestamp(System.currentTimeMillis()).build();
-            movingTransactionStatisticsService.add(t);
+            Transaction transaction = Transaction.builder().amount(Double.parseDouble(""+i)).timestamp(System.currentTimeMillis()).build();
+            try {
+                movingTransactionStatisticsService.add(transaction);
+            } catch (TooOlderTransactionException e) {
+                LOGGER.debug(e.getMessage());
+            }
             Thread.sleep(1000L);
         }
 
@@ -41,4 +53,5 @@ public class TransactionStatisticsApplicationTests {
 
         LOGGER.info("Testing statisticsServiceServiceTest() method completed");
     }
+
 }
