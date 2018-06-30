@@ -8,6 +8,10 @@ returns the statistic based of the transactions of the last 60 seconds.
 Compile and Run with:
 
     mvn spring-boot:run
+    
+Compile and Test with:
+
+    mvn clean test
 
 For API Documentation Swagger-UI point your browser to:
 
