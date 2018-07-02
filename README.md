@@ -19,7 +19,7 @@ For API Documentation Swagger-UI point your browser to:
      
 For REST API with all methods
 
-    http://localhost:8080/demo/swagger-ui.html
+    http://localhost:8080/swagger-ui.html
     http://localhost:8080/swagger-ui.html#!/statistics-controller/getStatisticsUsingGET
     http://localhost:8080/swagger-ui.html#!/statistics-controller/createTransactionUsingPOST
    
