@@ -40,9 +40,9 @@ public class MovingTransactionStatisticsService {
     @Scheduled(fixedDelay = 1000)
     private void collectStatistics() {
 
-        transactions = transactions.stream().
-                filter(p -> (System.currentTimeMillis() - p.getTimestamp()) < SECOND_FILTER)// only keep SECOND_FILTER second
-                .collect(Collectors.toList());
+        transactions.removeAll(transactions.stream().
+                filter(p -> (System.currentTimeMillis() - p.getTimestamp()) > SECOND_FILTER)// only keep SECOND_FILTER second
+                .collect(Collectors.toList()));
 
         DoubleSummaryStatistics result = transactions.stream()
                 .collect(summarizingDouble(Transaction::getAmount));
